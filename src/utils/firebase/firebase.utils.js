@@ -1,6 +1,6 @@
 import userEvent from "@testing-library/user-event";
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider} from 'firebase/auth'
+import { getAuth, signInWithPopup, signInWithRedirect, GoogleAuthProvider, createUserWithEmailAndPassword} from 'firebase/auth'
 import { getFirestore, doc, getDoc, setDoc} from 'firebase/firestore'
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,23 +15,23 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
-const provider = new GoogleAuthProvider();
-provider.setCustomParameters({
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
     prompt:'select_account'
 })
 
 export const auth = getAuth()
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider)
+export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 
 export const db = getFirestore()
-export const createUserDocumentFromAuth = async(userAuth) => {
+export const createUserDocumentFromAuth = async(userAuth, additionalinfo={}) => {
     const userDocRef =  await doc( db, 'users', userAuth.uid)
     const userSnapshot = await getDoc(userDocRef)
     if(!userSnapshot.exists()){
         const { displayName, email } = userAuth
         const createdAt = new Date()
         try{
-            await setDoc(userDocRef, {displayName, email, createdAt})
+            await setDoc(userDocRef, {displayName, email, createdAt, ...additionalinfo})
         }catch(error){
             console.log("error creating the usesr", error.message)
         }
@@ -40,3 +40,8 @@ export const createUserDocumentFromAuth = async(userAuth) => {
     return userDocRef
 
 } 
+
+export const createUserAuthWithEmailAndPassword = async(email,password) => {
+    if(!email || !password) return
+    return await createUserWithEmailAndPassword(auth, email, password)
+}
