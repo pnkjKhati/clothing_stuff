@@ -1,8 +1,9 @@
 import { useState } from "react"
 
-import { signInWithGooglePopup, createUserDocumentFromAuth, signInUserAuthWithEmailAndPassword } from "../../utils/firebase/firebase.utils"
+    import { signInWithGooglePopup, signInUserAuthWithEmailAndPassword } from "../../utils/firebase/firebase.utils"
 import Button from "../button/button.component"
 import FormInput from "../form-input/form-input.component"
+
 import './sign-in-form.style.scss'
 
 const defaultInputFeilds = {
@@ -26,8 +27,7 @@ const SignInForm = () => {
         event.preventDefault();
        
         try{
-            const response = await signInUserAuthWithEmailAndPassword(email, password)
-            console.log(response)
+            await signInUserAuthWithEmailAndPassword(email, password)
             setInputFeilds(defaultInputFeilds)
         }catch(error){
             switch(error.code){
@@ -44,8 +44,7 @@ const SignInForm = () => {
     }
 
     const signInWithGoogle = async() => {
-        const {user} = await signInWithGooglePopup()
-        createUserDocumentFromAuth(user)
+         await signInWithGooglePopup()
     }
 
     return(
