@@ -9,7 +9,6 @@ import { CategoryContainer, CategoryTitle } from "./category.style";
 const Category = () => {
     const { category } = useParams()
     const { categoriesMap } = useContext(CategoriesContext)
-    console.log("categoriesMap",categoriesMap);
     const [products, setProducts] = useState([])
 
     useEffect(( ) => {
