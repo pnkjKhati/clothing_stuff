@@ -8,22 +8,22 @@ import Shop from "./routes/shop/shop.component";
 import CheckOut from "./routes/checkout/checkout.component";
 import {
   createUserDocumentFromAuth,
-  onAuthStateChangedListener,
+  onAuthStateChangedListener
 } from "./utils/firebase/firebase.utils";
 import { setCurrentUser } from "./store/user/user.actions";
 import { useDispatch } from "react-redux";
 
 const App = () => {
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChangedListener((user) => {
-  //     if (user) {
-  //       createUserDocumentFromAuth(user);
-  //     }
-  //     dispatch(setCurrentUser(user));
-  //   });
-  //   return unsubscribe;
-  // }, []);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const unsubscribe = onAuthStateChangedListener(user => {
+      if (user) {
+        createUserDocumentFromAuth(user);
+      }
+      dispatch(setCurrentUser(user));
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <Routes>
